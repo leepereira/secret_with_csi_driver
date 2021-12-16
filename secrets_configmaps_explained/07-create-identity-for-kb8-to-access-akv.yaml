@@ -4,5 +4,11 @@ export SERVICE_PRINCIPAL_CLIENT_ID="$(az ad sp show --id http://leonsakv011-aks 
 
 since SPN is not possible, we are going to create a user assiged identity : leons-user-assigned-identity
 
+If we are using POD based identity, then we dont need to perform this step.
+
+The identity is associated with the AKS nodes that are enabled for managed identity authentication during the creation of the cluster.
+
+This is the one that will be referenced by the pods to get authenticated to other Azure resources as needed
+
 
 

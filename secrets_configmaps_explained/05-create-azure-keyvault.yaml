@@ -1,0 +1,1 @@
+  az keyvault create -n leonsakv011 -g 1-b5086bff-playground-sandbox --location centralus

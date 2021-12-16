@@ -1,0 +1,8 @@
+helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azure
+
+
+~/D/k8s_secrets_cm_volumes ❯❯❯ kubectl get pods
+NAME                                         READY   STATUS    RESTARTS   AGE
+csi-csi-secrets-store-provider-azure-hgpxd   1/1     Running   0          110s
+

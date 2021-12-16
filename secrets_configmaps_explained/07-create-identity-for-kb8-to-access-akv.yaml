@@ -1,0 +1,8 @@
+export SERVICE_PRINCIPAL_CLIENT_SECRET="$(az ad sp create-for-rbac --skip-assignment --name http://leonsakv011-aks --query 'password' -otsv)"
+export SERVICE_PRINCIPAL_CLIENT_ID="$(az ad sp show --id http://leonsakv011-aks --query 'appId' -otsv)"
+
+
+since SPN is not possible, we are going to create a user assiged identity : leons-user-assigned-identity
+
+
+

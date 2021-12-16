@@ -10,5 +10,7 @@ The identity is associated with the AKS nodes that are enabled for managed ident
 
 This is the one that will be referenced by the pods to get authenticated to other Azure resources as needed
 
+It would be found in the MC_ resource group
+
 
 

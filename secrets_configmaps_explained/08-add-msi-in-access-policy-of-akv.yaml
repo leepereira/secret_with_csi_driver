@@ -1,1 +1,1 @@
-add the msi "leons-user-assigned-identity" in the access policy of AKV : leonsakv011
+add the msi "msi that is created in the previous step" in the access policy of AKV : leonsakv011

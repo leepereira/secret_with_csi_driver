@@ -1,0 +1,22 @@
+#create Cert
+export CERT_NAME=ingresscert
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out ingress-tls.crt \
+    -keyout ingress-tls.key \
+    -subj "/CN=demo.test.com/O=ingress-tls"
+
+
+#Export Cert into PFX file
+export AKV_NAME="[YOUR AKV NAME]"
+export AKV_NAME=leonsakv011
+openssl pkcs12 -export -in ingress-tls.crt -inkey ingress-tls.key  -out $CERT_NAME.pfx
+# skip Password prompt    
+
+
+# Move Cert into AKV
+az keyvault certificate import --vault-name $AKV_NAME -n $CERT_NAME -f $CERT_NAME.pfx
+
+
+
+
+

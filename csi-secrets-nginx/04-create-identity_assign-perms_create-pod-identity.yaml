@@ -1,0 +1,40 @@
+#Create an identity which will be used by the pod
+
+# az group create --name myIdentityResourceGroup --location eastus
+export IDENTITY_RESOURCE_GROUP="rg02"
+export IDENTITY_NAME="aks-pod-identity"
+az identity create --resource-group ${IDENTITY_RESOURCE_GROUP} --name ${IDENTITY_NAME}
+export IDENTITY_CLIENT_ID="$(az identity show -g ${IDENTITY_RESOURCE_GROUP} -n ${IDENTITY_NAME} --query clientId -otsv)"  #298885bf-3035-475d-a4f2-c6b6a36df762
+export IDENTITY_RESOURCE_ID="$(az identity show -g ${IDENTITY_RESOURCE_GROUP} -n ${IDENTITY_NAME} --query id -otsv)"  #/subscriptions/67055a73-b2e1-4538-8b67-c940a4e5d3f3/resourcegroups/rg02/providers/Microsoft.ManagedIdentity/userAssignedIdentities/aks-pod-identity : this is the cluster identity ????
+
+
+#Assign permissions for the managed identity
+NODE_GROUP=$(az aks show -g rg02 -n leonaks101 --query nodeResourceGroup -o tsv)  #MC_rg02_leonaks101_australiaeast
+NODES_RESOURCE_ID=$(az group show -n $NODE_GROUP -o tsv --query "id")  #/subscriptions/67055a73-b2e1-4538-8b67-c940a4e5d3f3/resourceGroups/MC_rg02_leonaks101_australiaeast
+az role assignment create --role "Virtual Machine Contributor" --assignee "$IDENTITY_CLIENT_ID" --scope $NODES_RESOURCE_ID
+
+
+#Create a pod identity
+export POD_IDENTITY_NAME="my-pod-identity"
+export POD_IDENTITY_NAMESPACE="my-app"
+az aks pod-identity add --resource-group rg02 --cluster-name leonaks101 --namespace ${POD_IDENTITY_NAMESPACE}  --name ${POD_IDENTITY_NAME} --identity-resource-id ${IDENTITY_RESOURCE_ID}
+
+#validate the identities
+kubectl get azureidentity -n $POD_IDENTITY_NAMESPACE
+kubectl get azureidentitybinding -n $POD_IDENTITY_NAMESPACE
+
+
+
+
+# set policy to access keys in your key vault
+az keyvault set-policy -n leonsakv011 --key-permissions get --spn $IDENTITY_CLIENT_ID
+# set policy to access secrets in your key vault
+az keyvault set-policy -n leonsakv011 --secret-permissions get --spn $IDENTITY_CLIENT_ID
+# set policy to access certs in your key vault
+az keyvault set-policy -n leonsakv011 --certificate-permissions get --spn $IDENTITY_CLIENT_ID
+
+
+
+
+
+

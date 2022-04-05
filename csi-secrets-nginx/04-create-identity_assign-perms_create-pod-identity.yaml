@@ -9,19 +9,22 @@ export IDENTITY_RESOURCE_ID="$(az identity show -g ${IDENTITY_RESOURCE_GROUP} -n
 
 
 #Assign permissions for the managed identity
-NODE_GROUP=$(az aks show -g rg02 -n leonaks101 --query nodeResourceGroup -o tsv)  #MC_rg02_leonaks101_australiaeast
-NODES_RESOURCE_ID=$(az group show -n $NODE_GROUP -o tsv --query "id")  #/subscriptions/67055a73-b2e1-4538-8b67-c940a4e5d3f3/resourceGroups/MC_rg02_leonaks101_australiaeast
-az role assignment create --role "Virtual Machine Contributor" --assignee "$IDENTITY_CLIENT_ID" --scope $NODES_RESOURCE_ID
+NODE_GROUP=$(az aks show -g rg02 -n leonsaks01 --query nodeResourceGroup -o tsv)  #MC_rg02_leonsaks01_australiaeast
+NODES_RESOURCE_ID=$(az group show -n $NODE_GROUP -o tsv --query "id")  #/subscriptions/67055a73-b2e1-4538-8b67-c940a4e5d3f3/resourceGroups/MC_rg02_leonsaks01_australiaeast
+az role assignment create --role "Virtual Machine Contributor" --assignee "$IDENTITY_CLIENT_ID" --scope $NODES_RESOURCE_ID # assign VM contributor to aks-pod-identity over MC_rg02_leonsaks01_australiaeast
 
 
 #Create a pod identity
 export POD_IDENTITY_NAME="my-pod-identity"
-export POD_IDENTITY_NAMESPACE="my-app"
-az aks pod-identity add --resource-group rg02 --cluster-name leonaks101 --namespace ${POD_IDENTITY_NAMESPACE}  --name ${POD_IDENTITY_NAME} --identity-resource-id ${IDENTITY_RESOURCE_ID}
+export POD_IDENTITY_NAMESPACE="default"
+az aks pod-identity add --resource-group rg02 --cluster-name leonsaks01 --namespace ${POD_IDENTITY_NAMESPACE}  --name ${POD_IDENTITY_NAME} --identity-resource-id ${IDENTITY_RESOURCE_ID}
 
 #validate the identities
 kubectl get azureidentity -n $POD_IDENTITY_NAMESPACE
 kubectl get azureidentitybinding -n $POD_IDENTITY_NAMESPACE
+
+
+
 
 
 

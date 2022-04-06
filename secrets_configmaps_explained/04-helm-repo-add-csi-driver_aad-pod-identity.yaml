@@ -1,0 +1,35 @@
+helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+helm install csi csi-secrets-store-provider-azure/csi-secrets-store-provider-azure
+
+
+~/D/k8s_secrets_cm_volumes ❯❯❯ kubectl get pods
+NAME                                         READY   STATUS    RESTARTS   AGE
+csi-csi-secrets-store-provider-azure-hgpxd   1/1     Running   0          110s
+
+======================================================================
+
+
+helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts 
+
+helm install aad-pod-identity aad-pod-identity/aad-pod-identity  
+
+
+NAME: aad-pod-identity
+LAST DEPLOYED: Fri Apr  1 08:45:00 2022
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+You have successfully installed AAD Pod Identity in your Kubernetes cluster!
+
+To verify that AAD Pod Identity has started in standard mode, run:
+kubectl --namespace=default get pods -l "app.kubernetes.io/component=mic"
+NAME                                    READY   STATUS    RESTARTS   AGE
+aad-pod-identity-mic-6dc5cf4ddb-fvzvg   1/1     Running   0          11s
+aad-pod-identity-mic-6dc5cf4ddb-trphb   1/1     Running   0          11s
+
+
+kubectl --namespace=default get pods -l "app.kubernetes.io/component=nmi"
+NAME                         READY   STATUS    RESTARTS   AGE
+aad-pod-identity-nmi-hx8pv   1/1     Running   0          16s
